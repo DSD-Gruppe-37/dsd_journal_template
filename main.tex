@@ -1,9 +1,6 @@
 \documentclass[12pt,a4paper]{article}
 \usepackage{dsdmacros}
 
-%\usepackage[danish]{babel} % danish may not be present, if not try "sudo apt install texlive-lang-european" a fmtutil -sys --all
-%\selectlanguage{danish}
-
 \newcommand\mymaketitle[1]{
    \rule{\textwidth}{1.6pt}\vspace*{-\baselineskip}\vspace*{2pt}
    \rule{\textwidth}{0.4pt}
@@ -17,7 +14,7 @@
 \begin{document}
 
 \title{
-	\mymaketitle{E2DSD\\Øvelse \#[n] - [journal titel]}
+	\mymaketitle{E2DSD\\Øvelse \#[n] - [journal titel]} % TODO Replace [n] and [journal titel]
 }
 \author{
 	Gruppe \#37\\
@@ -25,9 +22,15 @@
    Rasmus Kahr --- 201803491\\
    Hoang Phuoc Pho Tran --- 201507142
 }
-\date{[journal dato]}
+\date{[journal dato]} % TODO Replace [journal dato]
 
 \maketitle
-\newpage
+\clearpage
+
+\tableofcontents
+% \listoffigures
+\clearpage
+
+% TODO journal pages
 
 \end{document}
