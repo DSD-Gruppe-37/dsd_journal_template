@@ -1,6 +1,6 @@
-\documentclass[12pt,a4paper]{article}
+\documentclass[10pt,a4paper,onesided]{article}
 \usepackage{dsdmacros}
-
+% \setcounter{section}{4}
 \newcommand\mymaketitle[1]{
    \rule{\textwidth}{1.6pt}\vspace*{-\baselineskip}\vspace*{2pt}
    \rule{\textwidth}{0.4pt}
@@ -12,23 +12,28 @@
 }
 
 \begin{document}
+\counterwithin{lstlisting}{section}
+\counterwithin{figure}{section}
 
 \title{
-	\mymaketitle{E2DSD\\Øvelse \#[n] - [journal titel]} % TODO Replace [n] and [journal titel]
+\mymaketitle{E2DSD --- Journal \#[n]\\[journal title]} % TODO Replace [n] and [journal title]
 }
 \author{
-	Gruppe \#37\\
-	Adam Ryager Høj --- 201803767\\
+   Gruppe \#37\\
+   Adam Ryager Høj --- 201803767\\
    Rasmus Kahr --- 201803491\\
    Hoang Phuoc Pho Tran --- 201507142
 }
-\date{[journal dato]} % TODO Replace [journal dato]
+\date{[journal date]} % TODO Replace [journal date]
 
 \maketitle
 \clearpage
 
 \tableofcontents
-% \listoffigures
+\clearpage
+
+\lstlistoflistings
+\listoffigures
 \clearpage
 
 % TODO journal pages

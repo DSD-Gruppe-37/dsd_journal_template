@@ -14,15 +14,62 @@
 \usepackage[marginparsep=8pt,left=3cm,right=3cm,top=2.4cm,bottom=2.4cm]{geometry}
 
 
+%%% Looks of the document..
+\usepackage{subcaption}
+
+\usepackage{etoc}
+\usepackage{scrhack}
+\usepackage{titlesec}
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\arabic{subsection}}
+\renewcommand{\thesubsubsection}{(\roman{subsubsection})}
+\titleformat{\section}%
+{\large\centering\uppercase}{Øvelse \thesection:}{0.5em}{}[{\titlerule[0.8pt]}]
+
+\titleformat{\subsection}%
+{\centering\bfseries}{Opgave \thesubsection :}{0.5em}{}[{\titlerule[0.2pt]}]
+\titleformat{\subsubsection}%   
+{\raggedright\bfseries}{}{0.5em}{}
+
+
+\usepackage{titlesec}
+\usepackage{titletoc}
+
+
+\titlecontents{subsection}
+          [7em] % ie, width of contentslabel + 0.5em
+          {\medskip}
+          {\contentslabel[\MakeUppercase Opgave \thecontentslabel.]{5.5em}}%\thecontentslabel
+          {\hspace*{-6.5em}}
+          {\titlerule*[0.5pc]{.}\contentspage}
+  \titlecontents{section}
+          [7em] % ie, width of contentslabel + 0.5em
+          {\medskip}
+          {\contentslabel[\textbf{ØVELSE} \thecontentslabel:]{5.5em}}%\thecontentslabel
+          {\hspace*{-6.5em}}
+          {\titlerule*[0.5pc]{.}\contentspage}
+%%%%%%%%%%%%%%%
+\usepackage{titleps,kantlipsum}
+\newpagestyle{mypage}{%
+  \headrule
+  \sethead{}{}{}
+  \setfoot{}{Opgave \thesubsection: \MakeUppercase{\subsectiontitle}}{\thepage}
+  \footrule
+}
+\settitlemarks{section,subsection,subsubsection}
+\pagestyle{mypage}
 
 % The looks and feels
-%\usepackage{times} - times new roman ??! Odd choice...
-\usepackage{kpfonts} % Pretty font
-%\usepackage{cmbright} % ComputerModern font
+\usepackage{kpfonts} % Pretty fonts
+\usepackage{inconsolata}
+\let\oldtexttt\texttt% Store \texttt
+\renewcommand{\texttt}[2][blue!60!red!60]{\textcolor{#1}{\ttfamily #2}}% \texttt[<color>]{<stuff>}
+% \usepackage{cmbright} % ComputerModern font
 \setlength\parindent{0pt}
 
 % Additional packages
 \usepackage{booktabs}
+\usepackage{tabularx}
 \usepackage{float}
 \usepackage{amsfonts}
 
@@ -39,14 +86,6 @@
     linkcolor=black,
     urlcolor=black
 }
-% Section numbering.. - remove leading number.
-% \makeatletter
-% \renewcommand{\@seccntformat}[1]{}
-% \makeatother
-% \makeatletter
-% \let\latexl@section\l@section
-% \def\l@section#1#2{\begingroup\let\numberline\@gobble\latexl@section{#1}{#2}\endgroup}
-% \makeatother
 
 % Etc 
 \usepackage{enumitem}
@@ -74,6 +113,7 @@
 \newcommand\Tabref[1]{Tab. \ref{tab:#1}}
 \newcommand\srcref[1]{source code table \ref{src:#1}}
 \newcommand\Srcref[1]{Source code table \ref{src:#1}}
+
 \newcommand\coderef[2][src]{source code table \ref{#1:#2}}
 \newcommand\CodeRef[2][src]{Source code table \ref{#1:#2}}
 \newcommand\coderefsimple[2][src]{\ref{#1:#2}}
@@ -81,17 +121,35 @@
 \newcommand\dsdfigbase[4]{
 	\begin{figure}[#4]
 		\centering
-  	 		#1
+    #1
 		\caption{#3}
 		\label{fig:#2}
 	\end{figure}
 }
+%%% Subfigure
+\newcommand\dsdsubfigbase[3]{
+	\begin{subfigure}[b]{0.475\textwidth}
+		\centering
+    #1
+		\caption{#3}
+		\label{fig:#2}
+	\end{subfigure}
+}
+
 
 % #1 Filename
 % #2 Figure width
 % #3 Caption
 \newcommand\dsdfig[3]{
 	\dsdfigbase{\includegraphics[width=#2]{\dirfigs#1}}{#1}{#3}{H}
+}
+
+%%% Subfigure
+% #1 filename/label
+% #2 Caption
+% #3 width 
+\newcommand\dsdsubfig[3]{
+	\dsdsubfigbase{\includegraphics[width=#3\textwidth]{\dirfigs#1}}{#1}{#2}
 }
 
 
@@ -101,25 +159,9 @@
 \newcommand\dsdtab[3]{
 	\begin{table}[H]
 		\centering
-			#1
+    #1
 		\caption{#2}
 		\label{tab:#3}
-	\end{table}
-}
-
-% #1 Filename
-% #2 Caption
-% #3 first line
-% #4 last line
-\newcommand\dsdsrc[4]{
-	\begin{table}[H]
-		\centering
-		  \framebox{
-        \rule{8pt}{0pt}
-        \lstinputlisting[firstline=#3,lastline=#4]{\dirsrc#1}
-      }
-		\caption{#2}
-		\label{src:#1}
 	\end{table}
 }
 
@@ -130,12 +172,16 @@
 \newcommand\includecode[4][src]{
 	\begin{table}[H]
 		\centering
-		  \framebox{
-        \rule{8pt}{0pt}
-        \lstinputlisting[#4]{\dirsrc#2}
-      }
-		\caption{#3}
-		\label{#1:#2}
+    \rule{8pt}{0pt}
+    \lstinputlisting[
+      label={#1:#2},
+      caption={#3},
+      xrightmargin=0.05\linewidth,
+      breakatwhitespace,
+      breaklines,
+      language=C++,
+      #4,
+    ]{\dirsrc#2}
 	\end{table}
 }
 
@@ -144,8 +190,8 @@
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
-\definecolor{backcol}{RGB}{255,255,255}
-%\definecolor{backcol}{RGB}{205,217,232}
+% \definecolor{backcol}{RGB}{245,245,245}
+\definecolor{backcol}{RGB}{205,217,232}
 \definecolor{aublue}{RGB}{3,66,142}
 \definecolor{aubluelight}{RGB}{129,160,198}
 
@@ -153,6 +199,7 @@
 \newcommand{\blue}[1]{{\color{blue}#1}}
 \newcommand{\green}[1]{{\color{codegreen}#1}}
 \newcommand{\cblue}[1]{\color{blue}#1}
+\definecolor{brickred}{rgb}{0.8, 0.25, 0.33}
 
 \def\dsdvhdlfontsize{\small}
 
@@ -161,7 +208,7 @@
     commentstyle=\color{codegreen}\dsdvhdlfontsize,
     keywordstyle=\color{blue}\dsdvhdlfontsize,
     numberstyle=\tiny\color{codegray},
-    stringstyle=\color{red}\dsdvhdlfontsize,
+    stringstyle=\color{brickred}\dsdvhdlfontsize,
     basicstyle=\ttfamily\dsdvhdlfontsize,
     keywords={
        variable,constant,downto,tolibrary,all,use,in,out,map,is,of,begin,end,signal,entity,port,architecture,component,if,then,else,process,array,array,is,type,subtype,type,subtype,range,with,select,when,others,case,elsif,null,assert,function,procedure,return,operator,library,VARIABLE,CONSTANT,DOWNTO,TOLIBRARY,ALL,USE,IN,OUT,MAP,IS,OF,BEGIN,END,SIGNAL,ENTITY,PORT,ARCHITECTURE,COMPONENT,IF,THEN,ELSE,PROCESS,ARRAY,ARRAY,IS,TYPE,SUBTYPE,TYPE,SUBTYPE,RANGE,WITH,SELECT,WHEN,OTHERS,CASE,ELSIF,NULL,ASSERT,FUNCTION,PROCEDURE,RETURN,OPERATOR,LIBRARY
@@ -176,16 +223,19 @@
     morestring=**[d]{'},
     morestring=[d]{\\'},
     morestring=**[d]{"},
-    breakatwhitespace=false,         
+    % morestring=[d]{'},
+    % morestring=[d]{"},
+    breakatwhitespace=true,         
     breaklines=true,                 
-    captionpos=b,                    
+    captionpos=b,                           % sets the caption-position to top
+    mathescape=true,                    
     keepspaces=true,                 
     numbers=left,                    
     numbersep=5pt,                  
     showspaces=false,                
     showstringspaces=false,
-    showtabs=false,                  
-    tabsize=2
+    showtabs=true,                  
+    tabsize=2,
 }
 
 \lstset{style=dsdvhdl}
